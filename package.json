@@ -6,10 +6,16 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysia/openapi": "^1.4.15",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "elysia": "latest",
+    "pg": "^8.21.0",
+    "prismabox": "^1.1.26"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "^1.3.14",
+    "prisma": "^7.8.0"
   },
   "module": "src/index.js"
 }
