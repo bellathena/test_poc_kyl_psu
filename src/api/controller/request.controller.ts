@@ -24,5 +24,55 @@ export const requestController = new Elysia({prefix:"/request"})
             200: RequestSchema.resultRequestsByCriteriaAndPagination
         }
     }
-
+  )
+  .post(
+    "/create",
+    async ({ body }) => {
+        await requestService.createRequest(body);
+        return "OK";
+    },
+    {
+        body: RequestSchema.requestCreateRequest,
+        detail:{
+            summary:"Create Request",
+            tags:["Request"]
+        },
+        response:{
+            200: RequestSchema.resultCreateRequest
+        }
+    }
+  )
+  .post(
+    "/update",
+    async ({ body }) => {
+        await requestService.updateRequest(body);
+        return "OK";
+    },
+    {
+        body: RequestSchema.requestUpdateRequest,
+        detail:{
+            summary:"Update Request",
+            tags:["Request"]
+        },
+        response:{
+            200: RequestSchema.resultUpdateRequest
+        }
+    }
+  )
+  .post(
+    "/delete",
+    async ({ body }) => {
+        await requestService.deleteRequest(body);
+        return "OK";
+    },
+    {
+        body: RequestSchema.requestDeleteRequest,
+        detail:{
+            summary:"Delete Request",
+            tags:["Request"]
+        },
+        response:{
+            200: RequestSchema.resultDeleteRequest
+        }
+    }
   )

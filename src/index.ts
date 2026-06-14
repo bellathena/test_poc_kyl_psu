@@ -1,9 +1,10 @@
 import { Elysia } from "elysia";
 import { openapi } from "@elysia/openapi";
+import { routes } from "./api/app.route";
 
 const app = new Elysia()
   .use(openapi())
-  .get("/", () => "Hello Elysia")
+  .use(routes)
   .listen(5000);
 
 console.log(
