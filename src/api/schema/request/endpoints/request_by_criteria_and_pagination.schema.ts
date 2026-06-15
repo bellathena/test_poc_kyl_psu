@@ -13,6 +13,7 @@ export const requestRequestsByCriteriaAndPagination = t.Object({
 });
 
 export const requestResponse = t.Object({
+    request_id: t.String(),
     request_number: t.String(),
     title: t.String(),
     request_type: t.Enum(RequestType),

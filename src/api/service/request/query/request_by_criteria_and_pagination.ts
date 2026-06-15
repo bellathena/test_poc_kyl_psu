@@ -16,6 +16,7 @@ type RequestRequestsByCriteriaAndPagination = {
 }
 
 type ModelRequestsByCriteriaAndPagination = {
+    request_id: string,
     request_number: string,
     title: string,
     request_type: RequestType,

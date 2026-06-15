@@ -2,6 +2,7 @@ import * as requestByCriteriaAndPaginationSchema from "./endpoints/request_by_cr
 import * as createRequestSchema from "./endpoints/create.schema";
 import * as updateRequestSchema from "./endpoints/update.schema";
 import * as deleteRequestSchema from "./endpoints/delete.schema";
+import * as requestByIdSchema from "./endpoints/request_by_id.schema";
 
 export namespace RequestSchema {
     //Request by criteria and pagination
@@ -37,4 +38,11 @@ export namespace RequestSchema {
 
     export type RequestDeleteRequest = deleteRequestSchema.RequestDeleteRequest;
     export type ResultDeleteRequest = deleteRequestSchema.ResultDeleteRequest;
+
+    // Request by ID
+    export const requestRequestById = requestByIdSchema.requestRequestById;
+    export const resultRequestById = requestByIdSchema.resultRequestById;
+
+    export type RequestRequestById = requestByIdSchema.RequestRequestById;
+    export type ResultRequestById = requestByIdSchema.ResultRequestById;
 }

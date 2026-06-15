@@ -8,6 +8,7 @@ type CriteriaRequestsByCriteriaAndPagination = {
 };
 
 type ResultRequestsByCriteriaAndPagination = {
+    request_id: string,
     request_number: string,
     title: string,
     request_type: RequestType,
@@ -75,6 +76,7 @@ export const repoCustomRequestsByCriteriaAndPagination: RequestsByCriteriaAndPag
             skip,
             take: limit,
             select: {
+                request_id: true,
                 request_number: true,
                 title: true,
                 request_type: true,
@@ -86,6 +88,7 @@ export const repoCustomRequestsByCriteriaAndPagination: RequestsByCriteriaAndPag
 
         const data: ResultRequestsByCriteriaAndPagination[] = requests.map((req) => {
             return {
+                request_id: req.request_id,
                 request_number: req.request_number,
                 title: req.title,
                 request_type: req.request_type,

@@ -76,3 +76,17 @@ export const requestController = new Elysia({prefix:"/request"})
         }
     }
   )
+  .get(
+    "/:request_id",
+    async ({ params }) =>
+        await requestService.getRequestById({ request_id: params.request_id }),
+    {
+        detail:{
+            summary:"Get Request By ID",
+            tags:["Request"]
+        },
+        response:{
+            200: RequestSchema.resultRequestById
+        }
+    }
+  )
