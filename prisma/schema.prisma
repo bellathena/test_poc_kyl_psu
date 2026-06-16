@@ -24,17 +24,64 @@ enum RequestType {
   FIND_FULLTEXT_4U
   ITHENTICATE
   BOOK_DELIVERY
+  ILL
+  ACADEMIC_PUBLICATION_DISSEMINATION
+}
+
+enum StatusRequest {
+  PENDING
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
 
 model Requests {
-  request_id        String  @id @default(uuid())
-  request_number    String
-  title             String
-  request_type      RequestType
-  requester_name    String
-  requester_email   String
-  detail            String
-  is_delete         Boolean @default(false)
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
+  request_id       String       @id @default(uuid())
+
+  request_number   String       @unique
+
+  title            String
+  request_type     RequestType
+
+  requester_name   String
+  requester_email  String
+
+  detail           String
+
+  is_delete        Boolean      @default(false)
+
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+
+  created_by       String?
+  user             Users?       @relation(fields: [created_by], references: [user_id])
+
+  @@index([request_number])
+  @@index([request_type])
 }
+
+model Users {
+  user_id        String    @id @default(uuid())
+
+  username       String    @unique
+  password_hash  String
+
+  first_name     String
+  last_name      String
+
+  role           UserRole  @default(USER)
+
+  is_active      Boolean   @default(true)
+  is_delete      Boolean   @default(false)
+
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+
+  requests       Requests[]
+}
+
