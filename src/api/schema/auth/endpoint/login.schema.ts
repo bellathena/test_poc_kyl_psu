@@ -1,4 +1,5 @@
 import { t } from "elysia";
+import { UserRole } from "../../../../generated/prisma/enums";
 
 export const requestLogin = t.Object({
     username: t.String(),
@@ -6,13 +7,14 @@ export const requestLogin = t.Object({
 })
 
 export const resultLogin = t.Object({
-    user_id: t.String(),
-    username: t.String(),
-    first_name: t.String(),
-    last_name: t.String(),
-    is_active: t.Boolean(),
-    created_at: t.Date(),
-    updated_at: t.Date(),
+    access_token: t.String(),
+    user: t.Object({
+        user_id: t.String(),
+        username: t.String(),
+        first_name: t.String(),
+        last_name: t.String(),
+        role: t.Enum(UserRole),
+    }),
 });
 
 export type RequestLogin = typeof requestLogin.static;

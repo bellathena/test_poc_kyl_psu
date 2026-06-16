@@ -5,10 +5,17 @@ class ApiError extends Error {
   errorCode: string;
   isOperational: boolean;
 
-  constructor(statusCode: number, entry: CustomErrorEntry, isOperational = true) {
-    super(entry.message);
+  constructor(statusCode: number, entryOrMessage: CustomErrorEntry | string, isOperational = true) {
+    const message = typeof entryOrMessage === "string"
+      ? entryOrMessage
+      : entryOrMessage.message;
+    const code = typeof entryOrMessage === "string"
+      ? String(statusCode)
+      : entryOrMessage.code;
+
+    super(message);
     this.statusCode = statusCode;
-    this.errorCode = entry.code;
+    this.errorCode = code;
     this.isOperational = isOperational;
     Error.captureStackTrace(this, this.constructor);
   }

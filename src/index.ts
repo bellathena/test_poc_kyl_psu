@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Elysia } from "elysia";
 import { openapi } from "@elysia/openapi";
 import { routes } from "./api/app.route";

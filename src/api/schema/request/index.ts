@@ -3,6 +3,7 @@ import * as createRequestSchema from "./endpoints/create.schema";
 import * as updateRequestSchema from "./endpoints/update.schema";
 import * as deleteRequestSchema from "./endpoints/delete.schema";
 import * as requestByIdSchema from "./endpoints/request_by_id.schema";
+import * as updateStatusSchema from "./endpoints/update_status.schema";
 
 export namespace RequestSchema {
     //Request by criteria and pagination
@@ -45,4 +46,11 @@ export namespace RequestSchema {
 
     export type RequestRequestById = requestByIdSchema.RequestRequestById;
     export type ResultRequestById = requestByIdSchema.ResultRequestById;
+
+    // Update request status (admin)
+    export const requestUpdateStatus = updateStatusSchema.requestUpdateStatus;
+    export const resultUpdateStatus = updateStatusSchema.resultUpdateStatus;
+
+    export type RequestUpdateStatus = updateStatusSchema.RequestUpdateStatus;
+    export type ResultUpdateStatus = updateStatusSchema.ResultUpdateStatus;
 }

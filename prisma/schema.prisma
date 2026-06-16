@@ -1,23 +1,18 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
-datasource db {
-  provider = "postgresql"
+generator prismabox {
+  provider                    = "prismabox"
+  output                      = "../generated/prismabox"
+  inputModel                  = "true"
+  typeboxImportDependencyName = "elysia"
+  typeboxImportVariableName   = "t"
 }
 
-generator prismabox { 
-  provider = "prismabox"
-  typeboxImportDependencyName = "elysia"
-  typeboxImportVariableName = "t"
-  inputModel = true
-  output   = "../generated/prismabox"
+datasource db {
+  provider = "postgresql"
 }
 
 enum RequestType {
@@ -53,6 +48,9 @@ model Requests {
 
   detail           String
 
+  status           StatusRequest @default(PENDING)
+  admin_response   String?
+
   is_delete        Boolean      @default(false)
 
   created_at       DateTime     @default(now())
@@ -61,8 +59,11 @@ model Requests {
   created_by       String?
   user             Users?       @relation(fields: [created_by], references: [user_id])
 
+  status_history   RequestStatusHistory[]
+
   @@index([request_number])
   @@index([request_type])
+  @@index([status])
 }
 
 model Users {
@@ -83,5 +84,26 @@ model Users {
   updated_at     DateTime  @updatedAt
 
   requests       Requests[]
+  status_history RequestStatusHistory[]
 }
 
+model RequestStatusHistory {
+  history_id   String        @id @default(uuid())
+
+  request_id   String
+  request      Requests      @relation(fields: [request_id], references: [request_id])
+
+  old_status   StatusRequest
+  new_status   StatusRequest
+
+  changed_by   String?
+  changed_by_user Users?     @relation(fields: [changed_by], references: [user_id])
+
+  remark       String?
+
+  created_at   DateTime      @default(now())
+
+  @@index([request_id])
+  @@index([changed_by])
+  @@index([created_at])
+}

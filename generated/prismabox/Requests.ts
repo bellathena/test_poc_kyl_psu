@@ -22,6 +22,16 @@ export const RequestsPlain = t.Object(
     requester_name: t.String(),
     requester_email: t.String(),
     detail: t.String(),
+    status: t.Union(
+      [
+        t.Literal("PENDING"),
+        t.Literal("IN_PROGRESS"),
+        t.Literal("RESOLVED"),
+        t.Literal("REJECTED"),
+      ],
+      { additionalProperties: false },
+    ),
+    admin_response: __nullable__(t.String()),
     is_delete: t.Boolean(),
     created_at: t.Date(),
     updated_at: t.Date(),
@@ -51,6 +61,37 @@ export const RequestsRelations = t.Object(
         { additionalProperties: false },
       ),
     ),
+    status_history: t.Array(
+      t.Object(
+        {
+          history_id: t.String(),
+          request_id: t.String(),
+          old_status: t.Union(
+            [
+              t.Literal("PENDING"),
+              t.Literal("IN_PROGRESS"),
+              t.Literal("RESOLVED"),
+              t.Literal("REJECTED"),
+            ],
+            { additionalProperties: false },
+          ),
+          new_status: t.Union(
+            [
+              t.Literal("PENDING"),
+              t.Literal("IN_PROGRESS"),
+              t.Literal("RESOLVED"),
+              t.Literal("REJECTED"),
+            ],
+            { additionalProperties: false },
+          ),
+          changed_by: __nullable__(t.String()),
+          remark: __nullable__(t.String()),
+          created_at: t.Date(),
+        },
+        { additionalProperties: false },
+      ),
+      { additionalProperties: false },
+    ),
   },
   { additionalProperties: false },
 );
@@ -72,6 +113,18 @@ export const RequestsPlainInputCreate = t.Object(
     requester_name: t.String(),
     requester_email: t.String(),
     detail: t.String(),
+    status: t.Optional(
+      t.Union(
+        [
+          t.Literal("PENDING"),
+          t.Literal("IN_PROGRESS"),
+          t.Literal("RESOLVED"),
+          t.Literal("REJECTED"),
+        ],
+        { additionalProperties: false },
+      ),
+    ),
+    admin_response: t.Optional(__nullable__(t.String())),
     is_delete: t.Optional(t.Boolean()),
     created_at: t.Optional(t.Date()),
     created_by: t.Optional(__nullable__(t.String())),
@@ -98,6 +151,18 @@ export const RequestsPlainInputUpdate = t.Object(
     requester_name: t.Optional(t.String()),
     requester_email: t.Optional(t.String()),
     detail: t.Optional(t.String()),
+    status: t.Optional(
+      t.Union(
+        [
+          t.Literal("PENDING"),
+          t.Literal("IN_PROGRESS"),
+          t.Literal("RESOLVED"),
+          t.Literal("REJECTED"),
+        ],
+        { additionalProperties: false },
+      ),
+    ),
+    admin_response: t.Optional(__nullable__(t.String())),
     is_delete: t.Optional(t.Boolean()),
     created_at: t.Optional(t.Date()),
     created_by: t.Optional(__nullable__(t.String())),
@@ -114,6 +179,22 @@ export const RequestsRelationsInputCreate = t.Object(
             {
               id: t.String({ additionalProperties: false }),
             },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    status_history: t.Optional(
+      t.Object(
+        {
+          connect: t.Array(
+            t.Object(
+              {
+                id: t.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
             { additionalProperties: false },
           ),
         },
@@ -137,6 +218,31 @@ export const RequestsRelationsInputUpdate = t.Partial(
               { additionalProperties: false },
             ),
             disconnect: t.Boolean(),
+          },
+          { additionalProperties: false },
+        ),
+      ),
+      status_history: t.Partial(
+        t.Object(
+          {
+            connect: t.Array(
+              t.Object(
+                {
+                  id: t.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+            disconnect: t.Array(
+              t.Object(
+                {
+                  id: t.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
           },
           { additionalProperties: false },
         ),
@@ -170,6 +276,16 @@ export const RequestsWhere = t.Partial(
           requester_name: t.String(),
           requester_email: t.String(),
           detail: t.String(),
+          status: t.Union(
+            [
+              t.Literal("PENDING"),
+              t.Literal("IN_PROGRESS"),
+              t.Literal("RESOLVED"),
+              t.Literal("REJECTED"),
+            ],
+            { additionalProperties: false },
+          ),
+          admin_response: t.String(),
           is_delete: t.Boolean(),
           created_at: t.Date(),
           updated_at: t.Date(),
@@ -232,6 +348,16 @@ export const RequestsWhereUnique = t.Recursive(
               requester_name: t.String(),
               requester_email: t.String(),
               detail: t.String(),
+              status: t.Union(
+                [
+                  t.Literal("PENDING"),
+                  t.Literal("IN_PROGRESS"),
+                  t.Literal("RESOLVED"),
+                  t.Literal("REJECTED"),
+                ],
+                { additionalProperties: false },
+              ),
+              admin_response: t.String(),
               is_delete: t.Boolean(),
               created_at: t.Date(),
               updated_at: t.Date(),
@@ -256,11 +382,14 @@ export const RequestsSelect = t.Partial(
       requester_name: t.Boolean(),
       requester_email: t.Boolean(),
       detail: t.Boolean(),
+      status: t.Boolean(),
+      admin_response: t.Boolean(),
       is_delete: t.Boolean(),
       created_at: t.Boolean(),
       updated_at: t.Boolean(),
       created_by: t.Boolean(),
       user: t.Boolean(),
+      status_history: t.Boolean(),
       _count: t.Boolean(),
     },
     { additionalProperties: false },
@@ -269,7 +398,13 @@ export const RequestsSelect = t.Partial(
 
 export const RequestsInclude = t.Partial(
   t.Object(
-    { request_type: t.Boolean(), user: t.Boolean(), _count: t.Boolean() },
+    {
+      request_type: t.Boolean(),
+      status: t.Boolean(),
+      user: t.Boolean(),
+      status_history: t.Boolean(),
+      _count: t.Boolean(),
+    },
     { additionalProperties: false },
   ),
 );
@@ -293,6 +428,9 @@ export const RequestsOrderBy = t.Partial(
         additionalProperties: false,
       }),
       detail: t.Union([t.Literal("asc"), t.Literal("desc")], {
+        additionalProperties: false,
+      }),
+      admin_response: t.Union([t.Literal("asc"), t.Literal("desc")], {
         additionalProperties: false,
       }),
       is_delete: t.Union([t.Literal("asc"), t.Literal("desc")], {
