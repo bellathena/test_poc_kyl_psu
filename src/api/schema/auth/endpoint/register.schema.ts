@@ -1,5 +1,6 @@
 import { t } from "elysia";
-import { UserRole } from "../../../../generated/prisma/enums";
+// Note: UserRole enum will be available after `prisma generate`
+// import { UserRole } from "../../../../generated/prisma/enums";
 
 export const requestRegister = t.Object({
   username: t.String({ minLength: 3 }),
@@ -10,7 +11,9 @@ export const requestRegister = t.Object({
 export const resultRegister = t.Object({
   user_id: t.String(),
   username: t.String(),
-  role: t.Enum(UserRole),
+  role: t.Union([t.Literal("USER"), t.Literal("ADMIN")], {
+    additionalProperties: false,
+  }),
 });
 
 // Types

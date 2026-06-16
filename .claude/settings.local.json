@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma *)",
+      "Bash(bun --version)",
+      "Bash(bun install *)",
+      "Bash(bunx prisma *)",
+      "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"do it more\" bunx prisma *)",
+      "Bash(curl -s http://localhost:5000/api/v1/auth/login -X POST -H \"Content-Type: application/json\" -d '{\"username\":\"testuser\",\"password\":\"test12345678\"}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://localhost:5000/api/v1/request/list -X POST -H \"Content-Type: application/json\" -d '{\"page\":1,\"limit\":10,\"criteria\":{}}')"
+    ]
+  }
+}

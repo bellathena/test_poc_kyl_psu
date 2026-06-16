@@ -43,10 +43,51 @@ export const UsersRelations = t.Object(
           requester_name: t.String(),
           requester_email: t.String(),
           detail: t.String(),
+          status: t.Union(
+            [
+              t.Literal("PENDING"),
+              t.Literal("IN_PROGRESS"),
+              t.Literal("RESOLVED"),
+              t.Literal("REJECTED"),
+            ],
+            { additionalProperties: false },
+          ),
+          admin_response: __nullable__(t.String()),
           is_delete: t.Boolean(),
           created_at: t.Date(),
           updated_at: t.Date(),
           created_by: __nullable__(t.String()),
+        },
+        { additionalProperties: false },
+      ),
+      { additionalProperties: false },
+    ),
+    status_history: t.Array(
+      t.Object(
+        {
+          history_id: t.String(),
+          request_id: t.String(),
+          old_status: t.Union(
+            [
+              t.Literal("PENDING"),
+              t.Literal("IN_PROGRESS"),
+              t.Literal("RESOLVED"),
+              t.Literal("REJECTED"),
+            ],
+            { additionalProperties: false },
+          ),
+          new_status: t.Union(
+            [
+              t.Literal("PENDING"),
+              t.Literal("IN_PROGRESS"),
+              t.Literal("RESOLVED"),
+              t.Literal("REJECTED"),
+            ],
+            { additionalProperties: false },
+          ),
+          changed_by: __nullable__(t.String()),
+          remark: __nullable__(t.String()),
+          created_at: t.Date(),
         },
         { additionalProperties: false },
       ),
@@ -110,6 +151,22 @@ export const UsersRelationsInputCreate = t.Object(
         { additionalProperties: false },
       ),
     ),
+    status_history: t.Optional(
+      t.Object(
+        {
+          connect: t.Array(
+            t.Object(
+              {
+                id: t.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
   },
   { additionalProperties: false },
 );
@@ -118,6 +175,31 @@ export const UsersRelationsInputUpdate = t.Partial(
   t.Object(
     {
       requests: t.Partial(
+        t.Object(
+          {
+            connect: t.Array(
+              t.Object(
+                {
+                  id: t.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+            disconnect: t.Array(
+              t.Object(
+                {
+                  id: t.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+          },
+          { additionalProperties: false },
+        ),
+      ),
+      status_history: t.Partial(
         t.Object(
           {
             connect: t.Array(
@@ -245,6 +327,7 @@ export const UsersSelect = t.Partial(
       created_at: t.Boolean(),
       updated_at: t.Boolean(),
       requests: t.Boolean(),
+      status_history: t.Boolean(),
       _count: t.Boolean(),
     },
     { additionalProperties: false },
@@ -253,7 +336,12 @@ export const UsersSelect = t.Partial(
 
 export const UsersInclude = t.Partial(
   t.Object(
-    { role: t.Boolean(), requests: t.Boolean(), _count: t.Boolean() },
+    {
+      role: t.Boolean(),
+      requests: t.Boolean(),
+      status_history: t.Boolean(),
+      _count: t.Boolean(),
+    },
     { additionalProperties: false },
   ),
 );

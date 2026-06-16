@@ -1,11 +1,13 @@
 import * as jwt from "jsonwebtoken";
-import { env } from "@config/env";
 
 export interface AccessTokenPayload {
   user_id: string;
   username: string;
   role: string;
 }
+
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "default-secret";
+const ACCESS_TOKEN_EXPIRES_IN = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN || "86400");
 
 export const jwtUtils = {
   /**
@@ -15,17 +17,11 @@ export const jwtUtils = {
     payload: AccessTokenPayload,
     expiresIn?: number
   ): string => {
-    const expires =
-      expiresIn ??
-      parseInt(env.ACCESS_TOKEN_EXPIRES_IN);
+    const expires = expiresIn ?? ACCESS_TOKEN_EXPIRES_IN;
 
-    return jwt.sign(
-      payload,
-      env.ACCESS_TOKEN_SECRET,
-      {
-        expiresIn: expires,
-      } as jwt.SignOptions
-    );
+    return jwt.sign(payload, ACCESS_TOKEN_SECRET, {
+      expiresIn: expires,
+    } as jwt.SignOptions);
   },
 
   /**
@@ -37,7 +33,7 @@ export const jwtUtils = {
     try {
       return jwt.verify(
         token,
-        env.ACCESS_TOKEN_SECRET
+        ACCESS_TOKEN_SECRET
       ) as AccessTokenPayload;
     } catch {
       return null;

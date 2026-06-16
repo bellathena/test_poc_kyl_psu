@@ -1,11 +1,12 @@
 import { logger } from "../../../../lib/logger";
 import { jwtUtils } from "../../../../lib/jwt";
+import { db } from "../../../../lib/prisma";
 import { verifyPassword } from "../../../../utils/encryption";
 
 import ApiError from "../../../../error/api.error";
+import { customError } from "../../../../error/custom_error/error_message";
 
 import { repoGenericUser } from "../../../repository/generic/user";
-import { UserRole, Users } from "../../../../generated/prisma/client";
 
 type RequestLogin = {
   username: string;
@@ -22,7 +23,7 @@ type ModelUser = {
   username: string;
   first_name: string;
   last_name: string;
-  role: UserRole;
+  role: "USER" | "ADMIN";
 };
 
 export const login = async (
@@ -31,7 +32,7 @@ export const login = async (
   const { username, password } = request;
 
   // 1. Find User
-  const user = await repoGenericUser.search({
+  const user = await repoGenericUser.search(db, {
     username,
     is_delete: false,
   });
@@ -45,7 +46,7 @@ export const login = async (
 
     throw new ApiError(
       401,
-      "Invalid username or password"
+      customError.INVALID_CREDENTIALS
     );
   }
 
@@ -58,7 +59,7 @@ export const login = async (
 
     throw new ApiError(
       403,
-      "User inactive"
+      customError.FORBIDDEN
     );
   }
 
@@ -77,7 +78,7 @@ export const login = async (
 
     throw new ApiError(
       401,
-      "Invalid username or password"
+      customError.INVALID_CREDENTIALS
     );
   }
 
