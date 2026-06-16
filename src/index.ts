@@ -7,7 +7,7 @@ import { cors } from "@elysia/cors";
 const app = new Elysia()
   .use(cors(
     {
-      origin: "http://localhost:5174",
+      origin: "http://localhost:5175",
     }
   ))
   .use(openapi())
